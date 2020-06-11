@@ -23,7 +23,7 @@
 
             teamChat.RegisterMembers(will, byron, geetha);
 
-            byron.Send("Hey Geetha, are you ready for a demo?");
+            byron.Send("Hey Geetha, are you ready for a quick huddle?");
             geetha.Send($"Yes Byron.");
 
             will.SendTo<DevTeamMember>("Can you review my PR?");
