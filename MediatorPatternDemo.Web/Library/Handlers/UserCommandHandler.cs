@@ -19,7 +19,9 @@
     /// <summary>
     /// The create user command handler.
     /// </summary>
-    public class CreateUserCommandHandler : IRequestHandler<CreateUserCommand, User>
+    public class UserCommandHandler : 
+        IRequestHandler<CreateUserCommand, User>,
+        IRequestHandler<UpdateUserCommand, User>
     {
         /// <summary>
         /// The context.
@@ -32,7 +34,7 @@
         private readonly ILogger<UserQueryHandler> logger;
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="CreateUserCommandHandler"/> class.
+        /// Initializes a new instance of the <see cref="UserCommandHandler"/> class.
         /// </summary>
         /// <param name="context">
         /// The context.
@@ -40,7 +42,7 @@
         /// <param name="logger">
         /// The logger.
         /// </param>
-        public CreateUserCommandHandler(UserContext context, ILogger<UserQueryHandler> logger)
+        public UserCommandHandler(UserContext context, ILogger<UserQueryHandler> logger)
         {
             this.context = context;
             this.logger = logger;
@@ -69,6 +71,35 @@
                            };
 
             this.context.Users.Add(user);
+            await this.context.SaveChangesAsync(cancellationToken);
+
+            return user;
+        }
+
+        /// <summary>
+        /// The handle.
+        /// </summary>
+        /// <param name="command">
+        /// The command.
+        /// </param>
+        /// <param name="cancellationToken">
+        /// The cancellation token.
+        /// </param>
+        /// <returns>
+        /// The <see cref="Task"/>.
+        /// </returns>
+        public async Task<User> Handle(UpdateUserCommand command, CancellationToken cancellationToken)
+        {
+            this.logger.LogDebug($"Request Command: {JsonConvert.SerializeObject(command)}\n");
+
+            var user = new User()
+                           {
+                               Id = command.Id,
+                               Name = command.Name,
+                               Email = command.Email
+                           };
+
+            this.context.Users.Update(user);
             await this.context.SaveChangesAsync(cancellationToken);
 
             return user;

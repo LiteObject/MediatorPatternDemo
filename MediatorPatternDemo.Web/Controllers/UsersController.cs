@@ -88,5 +88,26 @@
             User user = await this.mediator.Send(command);
             return this.Accepted(user);
         }
+
+        /// <summary>
+        /// The put.
+        /// </summary>
+        /// <param name="command">
+        /// The command.
+        /// </param>
+        /// <returns>
+        /// The <see cref="Task"/>.
+        /// </returns>
+        [HttpPut]
+        public async Task<IActionResult> Put([FromBody] UpdateUserCommand command)
+        {
+            if (!ModelState.IsValid)
+            {
+                return this.BadRequest(this.ModelState);
+            }
+
+            User user = await this.mediator.Send(command);
+            return this.Accepted(user);
+        }
     }
 }
