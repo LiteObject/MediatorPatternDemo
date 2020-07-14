@@ -1,5 +1,7 @@
 ﻿namespace MediatorPatternDemo.Web.Library.Handlers
 {
+    using System.Collections.Generic;
+    using System.Linq;
     using System.Threading;
     using System.Threading.Tasks;
 
@@ -17,7 +19,7 @@
     /// <summary>
     /// The user handler.
     /// </summary>
-    public class UserQueryHandler : IRequestHandler<UserQuery, User>
+    public class UserQueryHandler : IRequestHandler<UserQuery, IList<User>>
     {
         /// <summary>
         /// The context.
@@ -56,12 +58,24 @@
         /// <returns>
         /// The <see cref="Task"/>.
         /// </returns>
-        public Task<User> Handle(UserQuery request, CancellationToken cancellationToken)
+        public async Task<IList<User>> Handle(UserQuery request, CancellationToken cancellationToken)
         {
             this.logger.LogDebug($"Request Query: {JsonConvert.SerializeObject(request)}\n");
 
+            List<User> users;
+
             // Business logic here
-            return this.context.Users.FirstOrDefaultAsync<User>(u => u.Id == request.Id, cancellationToken: cancellationToken);
+            // this.context.Users.FirstOrDefaultAsync(u => u.Id == request.Id, cancellationToken: cancellationToken);
+            if (request != null && request.Id > 0)
+            {
+                users = await this.context.Users.Where(u => u.Id == request.Id).ToListAsync(cancellationToken: cancellationToken);
+            }
+            else
+            {
+                users = await this.context.Users.ToListAsync(cancellationToken: cancellationToken);
+            }
+
+            return users;
         }
     }
 }

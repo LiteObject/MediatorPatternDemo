@@ -1,5 +1,7 @@
 ﻿namespace MediatorPatternDemo.Web.Controllers
 {
+    using System.Collections.Generic;
+    using System.Linq;
     using System.Threading.Tasks;
 
     using MediatorPatternDemo.Web.Entities;
@@ -46,6 +48,29 @@
         }
 
         /// <summary>
+        /// The get all.
+        /// </summary>
+        /// <param name="query">
+        /// The query.
+        /// </param>
+        /// <returns>
+        /// The <see cref="Task"/>.
+        /// </returns>
+        [HttpGet]
+        public async Task<IActionResult> GetAll([FromRoute] UserQuery query)
+        {
+            IList<User> users = await this.mediator.Send<IList<User>>(query);
+
+            if (users == null)
+            {
+                return this.NotFound();
+            }
+            
+            this.logger.LogInformation($"{JsonConvert.SerializeObject(users)}");
+            return this.Ok(users);
+        }
+
+        /// <summary>
         /// The get.
         /// </summary>
         /// <param name="query">
@@ -57,12 +82,14 @@
         [HttpGet("{id}")]
         public async Task<IActionResult> Get([FromRoute] UserQuery query)
         {
-            User user = await this.mediator.Send(query);
+            IList<User> users = await this.mediator.Send<IList<User>>(query);
 
-            if (user == null)
+            if (users == null)
             {
                 return this.NotFound(query);
             }
+
+            User user = users.FirstOrDefault();
 
             this.logger.LogInformation($"{JsonConvert.SerializeObject(user)}");
             return this.Ok(user);
@@ -86,7 +113,8 @@
             }
 
             User user = await this.mediator.Send(command);
-            return this.Accepted(user);
+
+            return this.CreatedAtAction(nameof(this.Get), new { id = user.Id }, user);
         }
 
         /// <summary>
@@ -107,6 +135,13 @@
             }
 
             User user = await this.mediator.Send(command);
+
+            if (user is null)
+            {
+                return this.BadRequest($"User doesn't exist in the system. {JsonConvert.SerializeObject(command)}");
+            }
+
+            // return this.NoContent();
             return this.Accepted(user);
         }
     }

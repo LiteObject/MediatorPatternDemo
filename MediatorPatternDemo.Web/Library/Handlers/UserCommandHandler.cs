@@ -92,14 +92,17 @@
         {
             this.logger.LogDebug($"Request Command: {JsonConvert.SerializeObject(command)}\n");
 
-            var user = new User()
-                           {
-                               Id = command.Id,
-                               Name = command.Name,
-                               Email = command.Email
-                           };
+            User user = this.context.Users.FirstOrDefault(u => u.Id == command.Id);
 
-            this.context.Users.Update(user);
+            if (user is null)
+            {
+                return await Task.FromResult<User>(null);
+            }
+
+            user.Name = command.Name;
+            user.Email = command.Email;
+
+            // this.context.Users.Update(user);
             await this.context.SaveChangesAsync(cancellationToken);
 
             return user;
