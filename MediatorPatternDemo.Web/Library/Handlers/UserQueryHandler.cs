@@ -24,12 +24,12 @@
         /// <summary>
         /// The context.
         /// </summary>
-        private readonly UserContext context;
+        private readonly UserContext _context;
 
         /// <summary>
         /// The logger.
         /// </summary>
-        private readonly ILogger<UserQueryHandler> logger;
+        private readonly ILogger<UserQueryHandler> _logger;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="UserQueryHandler"/> class.
@@ -42,8 +42,8 @@
         /// </param>
         public UserQueryHandler(UserContext context, ILogger<UserQueryHandler> logger)
         {
-            this.context = context;
-            this.logger = logger;
+            this._context = context;
+            this._logger = logger;
         }
 
         /// <summary>
@@ -60,7 +60,7 @@
         /// </returns>
         public async Task<IList<User>> Handle(UserQuery request, CancellationToken cancellationToken)
         {
-            this.logger.LogDebug($"Request Query: {JsonConvert.SerializeObject(request)}\n");
+            this._logger.LogDebug($">>>>> Request Query: {JsonConvert.SerializeObject(request)}\n");
 
             List<User> users;
 
@@ -68,11 +68,11 @@
             // this.context.Users.FirstOrDefaultAsync(u => u.Id == request.Id, cancellationToken: cancellationToken);
             if (request != null && request.Id > 0)
             {
-                users = await this.context.Users.Where(u => u.Id == request.Id).ToListAsync(cancellationToken: cancellationToken);
+                users = await this._context.Users.Where(u => u.Id == request.Id).ToListAsync(cancellationToken: cancellationToken);
             }
             else
             {
-                users = await this.context.Users.ToListAsync(cancellationToken: cancellationToken);
+                users = await this._context.Users.ToListAsync(cancellationToken: cancellationToken);
             }
 
             return users;

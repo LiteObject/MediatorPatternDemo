@@ -1,3 +1,6 @@
+using MediatorPatternDemo.Web.Library.Behaviour;
+using Microsoft.OpenApi.Models;
+
 namespace MediatorPatternDemo.Web
 {
     using System;
@@ -60,6 +63,31 @@ namespace MediatorPatternDemo.Web
                         options.EnableSensitiveDataLogging(true);
                         options.UseInMemoryDatabase("MediatorPatternDemoDatabase");
                     });
+
+            services.AddTransient(typeof(IPipelineBehavior<,>), typeof(LoggingBehaviour<,>));
+
+            // Register the Swagger generator, defining 1 or more Swagger documents
+            services.AddSwaggerGen(c =>
+            {
+                c.SwaggerDoc("v1", new OpenApiInfo
+                {
+                    Version = "v1",
+                    Title = "Mediator Pattern Demo API",
+                    Description = "This project demos Mediator Pattern using MediatR",
+                    TermsOfService = new Uri("https://github.com/liteobject"),
+                    Contact = new OpenApiContact
+                    {
+                        Name = "Mohammed Hoque",
+                        Email = string.Empty,
+                        Url = new Uri("https://github.com/liteobject"),
+                    },
+                    License = new OpenApiLicense
+                    {
+                        Name = "Use under LICX",
+                        Url = new Uri("https://github.com/liteobject"),
+                    }
+                });
+            });
         }
 
         /// <summary>
@@ -74,6 +102,9 @@ namespace MediatorPatternDemo.Web
         /// </param>
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
         {
+            // Enable middleware to serve generated Swagger as a JSON endpoint.
+            app.UseSwagger();
+
             if (env.IsDevelopment())
             {
                 app.UseDeveloperExceptionPage();
@@ -81,8 +112,22 @@ namespace MediatorPatternDemo.Web
 
             app.UseHttpsRedirection();
 
-            app.UseRouting();
+            // Enable middleware to serve generated Swagger as a JSON endpoint.
+            app.UseSwagger(c =>
+            {
+                c.SerializeAsV2 = true;
+            });
 
+            // Enable middleware to serve swagger-ui (HTML, JS, CSS, etc.),
+            // specifying the Swagger JSON endpoint.
+            app.UseSwaggerUI(c =>
+            {
+                c.SwaggerEndpoint("/swagger/v1/swagger.json", "My API V1");
+                c.RoutePrefix = string.Empty;
+            });
+
+            app.UseRouting();
+            
             app.UseAuthorization();
 
             app.UseEndpoints(endpoints =>
@@ -90,13 +135,9 @@ namespace MediatorPatternDemo.Web
                 endpoints.MapControllers();
             });
 
-            using (IServiceScope serviceScope = app.ApplicationServices.CreateScope())
-            {
-                using (UserContext context = serviceScope.ServiceProvider.GetService<UserContext>())
-                {
-                    context.Database.EnsureCreated();
-                }
-            }
+            using IServiceScope serviceScope = app.ApplicationServices.CreateScope();
+            using UserContext context = serviceScope.ServiceProvider.GetService<UserContext>();
+            context?.Database.EnsureCreated();
         }
     }
 }

@@ -25,12 +25,12 @@
         /// <summary>
         /// The logger.
         /// </summary>
-        private readonly ILogger<UsersController> logger;
+        private readonly ILogger<UsersController> _logger;
 
         /// <summary>
         /// The mediator.
         /// </summary>
-        private readonly IMediator mediator;
+        private readonly IMediator _mediator;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="UsersController"/> class.
@@ -43,8 +43,8 @@
         /// </param>
         public UsersController(IMediator mediator, ILogger<UsersController> logger)
         {
-            this.mediator = mediator;
-            this.logger = logger;
+            this._mediator = mediator;
+            this._logger = logger;
         }
 
         /// <summary>
@@ -59,14 +59,14 @@
         [HttpGet]
         public async Task<IActionResult> GetAll([FromRoute] UserQuery query)
         {
-            IList<User> users = await this.mediator.Send<IList<User>>(query);
+            IList<User> users = await this._mediator.Send<IList<User>>(query);
 
             if (users == null)
             {
                 return this.NotFound();
             }
             
-            this.logger.LogInformation($"{JsonConvert.SerializeObject(users)}");
+            this._logger.LogInformation($"{JsonConvert.SerializeObject(users)}");
             return this.Ok(users);
         }
 
@@ -82,7 +82,7 @@
         [HttpGet("{id}")]
         public async Task<IActionResult> Get([FromRoute] UserQuery query)
         {
-            IList<User> users = await this.mediator.Send<IList<User>>(query);
+            IList<User> users = await this._mediator.Send<IList<User>>(query);
 
             if (users == null)
             {
@@ -91,7 +91,7 @@
 
             User user = users.FirstOrDefault();
 
-            this.logger.LogInformation($"{JsonConvert.SerializeObject(user)}");
+            this._logger.LogInformation($"{JsonConvert.SerializeObject(user)}");
             return this.Ok(user);
         }
 
@@ -112,7 +112,7 @@
                 return this.BadRequest(this.ModelState);
             }
 
-            User user = await this.mediator.Send(command);
+            User user = await this._mediator.Send(command);
 
             return this.CreatedAtAction(nameof(this.Get), new { id = user.Id }, user);
         }
@@ -134,7 +134,7 @@
                 return this.BadRequest(this.ModelState);
             }
 
-            User user = await this.mediator.Send(command);
+            User user = await this._mediator.Send(command);
 
             if (user is null)
             {

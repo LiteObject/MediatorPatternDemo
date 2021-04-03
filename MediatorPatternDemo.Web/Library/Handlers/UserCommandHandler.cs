@@ -70,7 +70,7 @@
                                Email = command.Email
                            };
 
-            this.context.Users.Add(user);
+            await this.context.Users.AddAsync(user, cancellationToken);
             await this.context.SaveChangesAsync(cancellationToken);
 
             return user;
