@@ -48,11 +48,11 @@ namespace MediatorPatternDemo.Web
         {
             services.AddControllers();
 
-            services.AddLogging(b =>
+            /*services.AddLogging(b =>
                 {
                     b.AddConsole().AddFilter("*", LogLevel.Trace);
                     b.AddDebug();
-                });
+                }); */
 
             services.AddMediatR(typeof(Startup));
 

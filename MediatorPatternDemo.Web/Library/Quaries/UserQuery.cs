@@ -14,6 +14,6 @@
         /// <summary>
         /// Gets or sets the id.
         /// </summary>
-        public int Id { get; set; }
+        public int? Id { get; set; }
     }
 }

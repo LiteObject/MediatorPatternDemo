@@ -49,6 +49,7 @@
 
         /// <summary>
         /// The get all.
+        /// By default, route parameters cannot be optional in OpenAPI/Swagger.
         /// </summary>
         /// <param name="query">
         /// The query.
@@ -59,6 +60,7 @@
         [HttpGet]
         public async Task<IActionResult> GetAll([FromRoute] UserQuery query)
         {
+            // By default, route parameters cannot be optional in OpenAPI/Swagger.
             IList<User> users = await this._mediator.Send<IList<User>>(query);
 
             if (users == null)
@@ -71,17 +73,18 @@
         }
 
         /// <summary>
-        /// The get.
+        /// The get by id.
+        /// By default, route parameters cannot be optional in OpenAPI/Swagger.
         /// </summary>
-        /// <param name="query">
-        /// The query.
-        /// </param>
+        /// <param name="id"></param>
         /// <returns>
         /// The <see cref="Task"/>.
         /// </returns>
         [HttpGet("{id}")]
-        public async Task<IActionResult> Get([FromRoute] UserQuery query)
+        public async Task<IActionResult> Get(int id)
         {
+            // By default, route parameters cannot be optional in OpenAPI/Swagger.
+            var query = new UserQuery() { Id = id };
             IList<User> users = await this._mediator.Send<IList<User>>(query);
 
             if (users == null)

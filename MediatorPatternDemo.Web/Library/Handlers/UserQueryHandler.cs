@@ -60,13 +60,19 @@
         /// </returns>
         public async Task<IList<User>> Handle(UserQuery request, CancellationToken cancellationToken)
         {
-            this._logger.LogDebug($">>>>> Request Query: {JsonConvert.SerializeObject(request)}\n");
+            if (request is null)
+            {
+                this._logger.LogWarning($"{nameof(request)} cannot be null");
+                return new List<User>();
+            }
+
+            this._logger.LogInformation($">>>>> Request Query: {JsonConvert.SerializeObject(request)}\n");
 
             List<User> users;
 
             // Business logic here
             // this.context.Users.FirstOrDefaultAsync(u => u.Id == request.Id, cancellationToken: cancellationToken);
-            if (request != null && request.Id > 0)
+            if (request?.Id > 0)
             {
                 users = await this._context.Users.Where(u => u.Id == request.Id).ToListAsync(cancellationToken: cancellationToken);
             }
