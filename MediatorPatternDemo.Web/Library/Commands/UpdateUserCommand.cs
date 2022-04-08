@@ -15,7 +15,7 @@
         /// Gets or sets the id.
         /// </summary>
         [Required]
-        [Range(1, int.MaxValue, ErrorMessage = "Please enter valid Id value")]
+        [Range(1, int.MaxValue, ErrorMessage = "Please enter valid user Id value")]
         public int Id { get; set; }
 
         /// <summary>

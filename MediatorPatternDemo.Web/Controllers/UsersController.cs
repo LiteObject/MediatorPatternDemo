@@ -149,10 +149,10 @@
         [HttpPut]
         public async Task<IActionResult> Put([FromBody] UpdateUserCommand command)
         {
-            if (!ModelState.IsValid)
-            {
-                return this.BadRequest(this.ModelState);
-            }
+            //if (!ModelState.IsValid)
+            //{
+            //    return this.BadRequest(this.ModelState);
+            //}
 
             User user = await this._mediator.Send(command);
 
