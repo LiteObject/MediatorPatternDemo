@@ -8,11 +8,12 @@
     using MediatR;
     using Microsoft.Extensions.Logging;
     
-    public class LoggingBehaviour<TRequest, TResponse> : IPipelineBehavior<TRequest, TResponse>
+    public class LoggingBehavior<TRequest, TResponse> : IPipelineBehavior<TRequest, TResponse>
+        where TRequest : IRequest<TResponse>
     {
-        private readonly ILogger<LoggingBehaviour<TRequest, TResponse>> _logger;
+        private readonly ILogger<LoggingBehavior<TRequest, TResponse>> _logger;
 
-        public LoggingBehaviour(ILogger<LoggingBehaviour<TRequest, TResponse>> logger)
+        public LoggingBehavior(ILogger<LoggingBehavior<TRequest, TResponse>> logger)
         {
             _logger = logger;
         }
@@ -27,13 +28,13 @@
             foreach (PropertyInfo prop in props)
             {
                 object propValue = prop.GetValue(request, null);
-                _logger.LogInformation("{Property} : {@Value}", prop.Name, propValue);
+                _logger.LogInformation(" - {Property} : {@Value}", prop.Name, propValue);
             }
 
             var response = await next();
 
             // Response
-            _logger.LogInformation($"Handled {typeof(TResponse).Name}");
+            _logger.LogInformation($"Handled \"{myType.Name}\". Response Type: {typeof(TResponse).Name}");
             return response;
         }
     }

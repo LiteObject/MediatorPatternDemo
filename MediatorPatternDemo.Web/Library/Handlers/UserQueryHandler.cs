@@ -66,15 +66,16 @@
                 return new List<User>();
             }
 
-            this._logger.LogInformation($">>>>> Request Query: {JsonConvert.SerializeObject(request)}\n");
+            this._logger.LogInformation($"Inside the handler. Not necessary since we have logging as pipeline behavior. Request Query: {JsonConvert.SerializeObject(request)}\n");
 
             List<User> users;
 
             // Business logic here
             // this.context.Users.FirstOrDefaultAsync(u => u.Id == request.Id, cancellationToken: cancellationToken);
-            if (request?.Id > 0)
+
+            if (request?.Name?.Length > 0)
             {
-                users = await this._context.Users.Where(u => u.Id == request.Id).ToListAsync(cancellationToken: cancellationToken);
+                users = await this._context.Users.Where(u => u.Name.Contains(request.Name)).ToListAsync(cancellationToken: cancellationToken);
             }
             else
             {

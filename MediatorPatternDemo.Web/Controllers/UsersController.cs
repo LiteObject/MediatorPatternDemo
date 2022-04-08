@@ -9,10 +9,11 @@
     using MediatorPatternDemo.Web.Library.Quaries;
 
     using MediatR;
-
+    using Microsoft.AspNetCore.Http;
     using Microsoft.AspNetCore.Mvc;
     using Microsoft.Extensions.Logging;
     using Newtonsoft.Json;
+    using Swashbuckle.AspNetCore.Annotations;
 
     /// <summary>
     /// The users controller.
@@ -58,7 +59,14 @@
         /// The <see cref="Task"/>.
         /// </returns>
         [HttpGet]
-        public async Task<IActionResult> GetAll([FromRoute] UserQuery query)
+        [SwaggerOperation(
+             Summary = "Retrieve a list of user",
+             Description = "Retrieve a list of users",
+             Tags = new[] { "users" })
+        ]
+        [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(IList<User>))]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
+        public async Task<IActionResult> GetAll([FromQuery] UserQuery query = null)
         {
             // By default, route parameters cannot be optional in OpenAPI/Swagger.
             IList<User> users = await this._mediator.Send<IList<User>>(query);
@@ -81,6 +89,13 @@
         /// The <see cref="Task"/>.
         /// </returns>
         [HttpGet("{id}")]
+        [SwaggerOperation(
+             Summary = "Retrieve a user by Id",
+             Description = "Retrieve a user by Id",
+             Tags = new[] { "user" })
+        ]
+        [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(User))]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
         public async Task<IActionResult> Get(int id)
         {
             // By default, route parameters cannot be optional in OpenAPI/Swagger.
@@ -108,12 +123,14 @@
         /// The <see cref="Task"/>.
         /// </returns>
         [HttpPost]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        [ProducesResponseType(StatusCodes.Status201Created)]
         public async Task<IActionResult> Post([FromBody] CreateUserCommand command)
         {
-            if (!ModelState.IsValid)
-            {
-                return this.BadRequest(this.ModelState);
-            }
+            //if (!ModelState.IsValid)
+            //{
+            //    return this.BadRequest(this.ModelState);
+            //}
 
             User user = await this._mediator.Send(command);
 

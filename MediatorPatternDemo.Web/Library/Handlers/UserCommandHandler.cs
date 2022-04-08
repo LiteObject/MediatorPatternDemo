@@ -64,6 +64,7 @@
         {
             this.logger.LogDebug($"Request Command: {JsonConvert.SerializeObject(command)}\n");
 
+            // TO-DO: User auto mapper.
             var user = new User()
                            {
                                Name = command.Name,
@@ -71,7 +72,9 @@
                            };
 
             await this.context.Users.AddAsync(user, cancellationToken);
-            await this.context.SaveChangesAsync(cancellationToken);
+            var saveCount = await this.context.SaveChangesAsync(cancellationToken);
+
+            this.logger.LogInformation($"Saved {saveCount} {typeof(User).Name}");
 
             return user;
         }

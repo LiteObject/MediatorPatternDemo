@@ -8,6 +8,7 @@ namespace MediatorPatternDemo.Web
     using MediatorPatternDemo.Web.Data;
 
     using MediatR;
+    using MediatR.Pipeline;
     using Microsoft.AspNetCore.Builder;
     using Microsoft.AspNetCore.Hosting;
     using Microsoft.EntityFrameworkCore;
@@ -54,7 +55,8 @@ namespace MediatorPatternDemo.Web
                     b.AddDebug();
                 }); */
 
-            services.AddMediatR(typeof(Startup));
+            services.AddMediatR(typeof(Startup));            
+            services.AddTransient(typeof(IPipelineBehavior<,>), typeof(LoggingBehavior<,>));
 
             // services.AddEntityFrameworkInMemoryDatabase();
             services.AddDbContext<UserContext>(
@@ -63,9 +65,7 @@ namespace MediatorPatternDemo.Web
                         options.EnableSensitiveDataLogging(true);
                         options.UseInMemoryDatabase("MediatorPatternDemoDatabase");
                     });
-
-            services.AddTransient(typeof(IPipelineBehavior<,>), typeof(LoggingBehaviour<,>));
-
+            
             // Register the Swagger generator, defining 1 or more Swagger documents
             services.AddSwaggerGen(c =>
             {
@@ -127,7 +127,7 @@ namespace MediatorPatternDemo.Web
             });
 
             app.UseRouting();
-            
+
             app.UseAuthorization();
 
             app.UseEndpoints(endpoints =>
