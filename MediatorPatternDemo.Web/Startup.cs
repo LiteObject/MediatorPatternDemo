@@ -5,6 +5,7 @@ namespace MediatorPatternDemo.Web
 {
     using System;
     using System.Collections.Generic;
+    using Hellang.Middleware.ProblemDetails;
     using MediatorPatternDemo.Web.Data;
 
     using MediatR;
@@ -48,6 +49,15 @@ namespace MediatorPatternDemo.Web
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddControllers();
+            services.AddProblemDetails(opts => {
+                // Control when an exception is included
+                opts.IncludeExceptionDetails = (ctx, ex) =>
+                {
+                    // Fetch services from HttpContext.RequestServices
+                    var env = ctx.RequestServices.GetRequiredService<IHostEnvironment>();
+                    return env.IsDevelopment() || env.IsStaging();
+                };
+            });
 
             /*services.AddLogging(b =>
                 {
@@ -102,6 +112,8 @@ namespace MediatorPatternDemo.Web
         /// </param>
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
         {
+            app.UseProblemDetails();
+
             // Enable middleware to serve generated Swagger as a JSON endpoint.
             app.UseSwagger();
 

@@ -2,6 +2,7 @@
 {
     using System.Collections.Generic;
     using System.Linq;
+    using System.Net;
     using System.Threading.Tasks;
 
     using MediatorPatternDemo.Web.Entities;
@@ -146,19 +147,28 @@
         /// <returns>
         /// The <see cref="Task"/>.
         /// </returns>
-        [HttpPut]
-        public async Task<IActionResult> Put([FromBody] UpdateUserCommand command)
+        [HttpPut("{id}")]
+        [ProducesResponseType(StatusCodes.Status201Created)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
+        public async Task<IActionResult> Put([FromRoute]int id, [FromBody] UpdateUserCommand command)
         {
             //if (!ModelState.IsValid)
             //{
             //    return this.BadRequest(this.ModelState);
             //}
 
+            if (id != command.Id) 
+            {
+                return this.Problem(title: "Mismatched Ids", detail: $"Mismatched Ids", statusCode: (int)HttpStatusCode.BadRequest);
+            }
+
             User user = await this._mediator.Send(command);
 
             if (user is null)
             {
-                return this.BadRequest($"User doesn't exist in the system. {JsonConvert.SerializeObject(command)}");
+                // return this.BadRequest($"User doesn't exist in the system. {JsonConvert.SerializeObject(command)}");
+                return this.Problem(title: "User doesn't exist", detail: $"Unable to fund user in the system.", statusCode: (int)HttpStatusCode.BadRequest);
             }
 
             // return this.NoContent();
