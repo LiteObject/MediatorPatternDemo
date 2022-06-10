@@ -7,7 +7,7 @@ namespace MediatorPatternDemo.Web
     using System.Collections.Generic;
     using Hellang.Middleware.ProblemDetails;
     using MediatorPatternDemo.Web.Data;
-
+    using MediatorPatternDemo.Web.Library.Behavior;
     using MediatR;
     using MediatR.Pipeline;
     using Microsoft.AspNetCore.Builder;
@@ -60,13 +60,15 @@ namespace MediatorPatternDemo.Web
             });
 
             /*services.AddLogging(b =>
-                {
-                    b.AddConsole().AddFilter("*", LogLevel.Trace);
-                    b.AddDebug();
-                }); */
+            {
+                b.AddConsole().AddFilter("*", LogLevel.Trace);
+                b.AddDebug();
+            }); */
 
+            // services.AddMediatR(Assembly.GetExecutingAssembly());
             services.AddMediatR(typeof(Startup));            
             services.AddTransient(typeof(IPipelineBehavior<,>), typeof(LoggingBehavior<,>));
+            services.AddTransient(typeof(IPipelineBehavior<,>), typeof(RetryPolicyBehavior<,>));
 
             // services.AddEntityFrameworkInMemoryDatabase();
             services.AddDbContext<UserContext>(

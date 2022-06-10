@@ -7,6 +7,7 @@
 
     using MediatorPatternDemo.Web.Entities;
     using MediatorPatternDemo.Web.Library.Commands;
+    using MediatorPatternDemo.Web.Library.Events;
     using MediatorPatternDemo.Web.Library.Quaries;
 
     using MediatR;
@@ -134,6 +135,11 @@
             //}
 
             User user = await this._mediator.Send(command);
+            await this._mediator.Publish<UserCreated>(new UserCreated() { 
+                Id = user.Id,
+                Name = user.Name,
+                Email = user.Email
+            });
 
             return this.CreatedAtAction(nameof(this.Get), new { id = user.Id }, user);
         }

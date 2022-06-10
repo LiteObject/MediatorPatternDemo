@@ -62,7 +62,7 @@
         /// </returns>
         public async Task<User> Handle(CreateUserCommand command, CancellationToken cancellationToken)
         {
-            this.logger.LogDebug($"Request Command: {JsonConvert.SerializeObject(command)}\n");
+            this.logger.LogDebug("Invoked {handler} to handle {command} command. {data} \n", nameof(UserCommandHandler), nameof(CreateUserCommand), JsonConvert.SerializeObject(command));
 
             // TO-DO: User auto mapper.
             var user = new User()
@@ -74,7 +74,7 @@
             await this.context.Users.AddAsync(user, cancellationToken);
             var saveCount = await this.context.SaveChangesAsync(cancellationToken);
 
-            this.logger.LogInformation($"Saved {saveCount} {typeof(User).Name}");
+            this.logger.LogInformation("Saved {saveCount} {name}: {object}", saveCount, typeof(User).Name, System.Text.Json.JsonSerializer.Serialize(user));
 
             return user;
         }
@@ -93,7 +93,7 @@
         /// </returns>
         public async Task<User> Handle(UpdateUserCommand command, CancellationToken cancellationToken)
         {
-            this.logger.LogDebug($"Request Command: {JsonConvert.SerializeObject(command)}\n");
+            this.logger.LogDebug("Invoked {handler} to handle {command} command. {data} \n", nameof(UserCommandHandler), nameof(UpdateUserCommand), JsonConvert.SerializeObject(command));
 
             User user = this.context.Users.FirstOrDefault(u => u.Id == command.Id);
 

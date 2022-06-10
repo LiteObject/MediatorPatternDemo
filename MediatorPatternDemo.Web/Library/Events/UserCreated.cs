@@ -1,20 +1,18 @@
-﻿namespace MediatorPatternDemo.Web.Library.Commands
+﻿using MediatR;
+using System.ComponentModel.DataAnnotations;
+
+namespace MediatorPatternDemo.Web.Library.Events
 {
-    using System.ComponentModel.DataAnnotations;
-
-    using MediatorPatternDemo.Web.Entities;
-    using MediatorPatternDemo.Web.Library.Attributes;
-    using MediatR;
-
     /// <summary>
-    /// The command.
+    /// For more examples:
+    /// https://github.com/jbogard/MediatR/blob/master/samples/MediatR.Examples/PingedHandler.cs
     /// </summary>
-    [RetryPolicy(2, 200)]
-    public class CreateUserCommand : IRequest<User>
+    public class UserCreated : INotification
     {
         /// <summary>
         /// Gets or sets the id.
         /// </summary>
+        [Required]
         public int Id { get; set; }
 
         /// <summary>
