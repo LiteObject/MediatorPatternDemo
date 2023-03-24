@@ -1,8 +1,5 @@
 ﻿using MediatorPatternDemo.Web.Library.Events;
 using MediatR;
-using Microsoft.Extensions.Logging;
-using System.Threading;
-using System.Threading.Tasks;
 
 namespace MediatorPatternDemo.Web.Library.Handlers
 {
@@ -10,21 +7,21 @@ namespace MediatorPatternDemo.Web.Library.Handlers
     /// For more examples:
     /// https://github.com/jbogard/MediatR/blob/master/samples/MediatR.Examples/PingedHandler.cs
     /// </summary>
-    public class UserWelcomeEmaildHandler : INotificationHandler<UserCreated>
+    public class UserWelcomeEmailHandler : INotificationHandler<UserCreated>
     {
-        private readonly ILogger<UserQueryHandler> logger;
+        // private readonly ILogger<UserQueryHandler> logger;
 
-        public UserWelcomeEmaildHandler(ILogger<UserQueryHandler> logger)
+        public UserWelcomeEmailHandler()
         {
-            this.logger = logger;
         }
 
         public Task Handle(UserCreated notification, CancellationToken cancellationToken)
         {
-            logger.LogInformation("Invoked {name} to handle {eventname} event.", nameof(UserWelcomeEmaildHandler), nameof(UserCreated));
+            ArgumentNullException.ThrowIfNull(notification);
 
-            logger.LogInformation("We are sending out an email welcoming the new user {name} ({email}).", notification.Name, notification.Email);
-            
+            Console.WriteLine($"Invoked {nameof(UserWelcomeEmailHandler)} to handle {nameof(UserCreated)} event.");
+            Console.WriteLine($"We are sending out an email welcoming the new user {notification.Name} ({notification.Email}).");
+
             return Task.CompletedTask;
         }
     }

@@ -7,7 +7,7 @@
         public void Register(FriendBase Friend)
         {
             Friend.SetMediator(this);
-            this.Friends.Add(Friend);
+            Friends.Add(Friend);
         }
 
         public T CreateFriend<T>()
@@ -16,13 +16,13 @@
             // Encapsulate the creation and bidirectional communication
             T c = new();
             c.SetMediator(this);
-            this.Friends.Add(c);
+            Friends.Add(c);
             return c;
         }
 
         public override void Send(string message, FriendBase fromFriend)
         {
-            this.Friends.Where(c => c != fromFriend).ToList().ForEach(c => c.HandleNotification(message));
+            Friends.Where(c => c != fromFriend).ToList().ForEach(c => c.HandleNotification(message));
         }
     }
 }

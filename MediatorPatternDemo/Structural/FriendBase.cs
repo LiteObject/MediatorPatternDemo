@@ -14,7 +14,7 @@
 
         public virtual void Send(string message)
         {
-            this.mediator.Send(message, this);
+            mediator.Send(message, this);
         }
 
         public abstract void HandleNotification(string message);

@@ -1,22 +1,14 @@
-﻿namespace MediatorPatternDemo.Web.Controllers
+﻿using MediatorPatternDemo.Web.Entities;
+using MediatorPatternDemo.Web.Library.Commands;
+using MediatorPatternDemo.Web.Library.Events;
+using MediatorPatternDemo.Web.Library.Quaries;
+using MediatR;
+using Microsoft.AspNetCore.Mvc;
+using Swashbuckle.AspNetCore.Annotations;
+using System.Net;
+
+namespace MediatorPatternDemo.Web.Controllers
 {
-    using System.Collections.Generic;
-    using System.Linq;
-    using System.Net;
-    using System.Threading.Tasks;
-
-    using MediatorPatternDemo.Web.Entities;
-    using MediatorPatternDemo.Web.Library.Commands;
-    using MediatorPatternDemo.Web.Library.Events;
-    using MediatorPatternDemo.Web.Library.Quaries;
-
-    using MediatR;
-    using Microsoft.AspNetCore.Http;
-    using Microsoft.AspNetCore.Mvc;
-    using Microsoft.Extensions.Logging;
-    using Newtonsoft.Json;
-    using Swashbuckle.AspNetCore.Annotations;
-
     /// <summary>
     /// The users controller.
     /// More info: https://docs.microsoft.com/en-us/dotnet/architecture/microservices/microservice-ddd-cqrs-patterns/microservice-application-layer-implementation-web-api
@@ -25,11 +17,6 @@
     [ApiController]
     public class UsersController : ControllerBase
     {
-        /// <summary>
-        /// The logger.
-        /// </summary>
-        private readonly ILogger<UsersController> _logger;
-
         /// <summary>
         /// The mediator.
         /// </summary>
@@ -44,10 +31,9 @@
         /// <param name="logger">
         /// The logger.
         /// </param>
-        public UsersController(IMediator mediator, ILogger<UsersController> logger)
+        public UsersController(IMediator mediator)
         {
-            this._mediator = mediator;
-            this._logger = logger;
+            _mediator = mediator;
         }
 
         /// <summary>
@@ -68,18 +54,11 @@
         ]
         [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(IList<User>))]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
-        public async Task<IActionResult> GetAll([FromQuery] UserQuery query = null)
+        public async Task<IActionResult> GetAll([FromQuery] UserQuery? query = null)
         {
             // By default, route parameters cannot be optional in OpenAPI/Swagger.
-            IList<User> users = await this._mediator.Send<IList<User>>(query);
-
-            if (users == null)
-            {
-                return this.NotFound();
-            }
-            
-            this._logger.LogInformation($"{JsonConvert.SerializeObject(users)}");
-            return this.Ok(users);
+            IList<User> users = await _mediator.Send<IList<User>>(query, default);
+            return users == null || !users.Any() ? NotFound() : Ok(users);
         }
 
         /// <summary>
@@ -101,18 +80,17 @@
         public async Task<IActionResult> Get(int id)
         {
             // By default, route parameters cannot be optional in OpenAPI/Swagger.
-            var query = new UserQuery() { Id = id };
-            IList<User> users = await this._mediator.Send<IList<User>>(query);
+            UserQuery query = new() { Id = id };
+            IList<User> users = await _mediator.Send<IList<User>>(query);
 
             if (users == null)
             {
-                return this.NotFound(query);
+                return NotFound(query);
             }
 
-            User user = users.FirstOrDefault();
+            User? user = users.FirstOrDefault();
 
-            this._logger.LogInformation($"{JsonConvert.SerializeObject(user)}");
-            return this.Ok(user);
+            return Ok(user);
         }
 
         /// <summary>
@@ -134,14 +112,16 @@
             //    return this.BadRequest(this.ModelState);
             //}
 
-            User user = await this._mediator.Send(command);
-            await this._mediator.Publish<UserCreated>(new UserCreated() { 
+            User user = await _mediator.Send(command);
+
+            await _mediator.Publish(new UserCreated()
+            {
                 Id = user.Id,
                 Name = user.Name,
                 Email = user.Email
             });
 
-            return this.CreatedAtAction(nameof(this.Get), new { id = user.Id }, user);
+            return CreatedAtAction(nameof(this.Get), new { id = user.Id }, user);
         }
 
         /// <summary>
@@ -154,31 +134,31 @@
         /// The <see cref="Task"/>.
         /// </returns>
         [HttpPut("{id}")]
-        [ProducesResponseType(StatusCodes.Status201Created)]
+        [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
-        public async Task<IActionResult> Put([FromRoute]int id, [FromBody] UpdateUserCommand command)
+        public async Task<IActionResult> Put([FromRoute] int id, [FromBody] UpdateUserCommand command)
         {
             //if (!ModelState.IsValid)
             //{
             //    return this.BadRequest(this.ModelState);
             //}
 
-            if (id != command.Id) 
+            if (id != command?.Id)
             {
-                return this.Problem(title: "Mismatched Ids", detail: $"Mismatched Ids", statusCode: (int)HttpStatusCode.BadRequest);
+                return Problem(title: "Mismatched Ids", detail: $"Mismatched Ids", statusCode: (int)HttpStatusCode.BadRequest);
             }
 
-            User user = await this._mediator.Send(command);
+            User user = await _mediator.Send(command).ConfigureAwait(false);
 
             if (user is null)
             {
                 // return this.BadRequest($"User doesn't exist in the system. {JsonConvert.SerializeObject(command)}");
-                return this.Problem(title: "User doesn't exist", detail: $"Unable to fund user in the system.", statusCode: (int)HttpStatusCode.BadRequest);
+                return Problem(title: "User doesn't exist", detail: $"Unable to fund user in the system.", statusCode: (int)HttpStatusCode.NotFound);
             }
 
             // return this.NoContent();
-            return this.Accepted(user);
+            return Ok(user);
         }
     }
 }

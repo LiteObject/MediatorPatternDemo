@@ -1,6 +1,4 @@
-﻿using System;
-
-namespace MediatorPatternDemo.Web.Library.Attributes
+﻿namespace MediatorPatternDemo.Web.Library.Attributes
 {
     /// <summary>
     /// Applies a retry policy on the MediatR request.
@@ -9,15 +7,15 @@ namespace MediatorPatternDemo.Web.Library.Attributes
     /// Original: https://gist.github.com/henkmollema/ba21bb90c35580a7189e77624d9ed8d1
     /// </summary>
     [AttributeUsage(AttributeTargets.Class)]
-    public class RetryPolicyAttribute : Attribute
+    public sealed class RetryPolicyAttribute : Attribute
     {
         private int _retryCount;
         private int _sleepDuration;
 
-        public RetryPolicyAttribute(int retryCount = 3, int sleepDuration = 500) 
+        public RetryPolicyAttribute(int retryCount = 3, int sleepDuration = 500)
         {
-            this.RetryCount = retryCount;
-            this.SleepDuration = sleepDuration;
+            RetryCount = retryCount;
+            SleepDuration = sleepDuration;
         }
 
         /// <summary>
@@ -28,7 +26,7 @@ namespace MediatorPatternDemo.Web.Library.Attributes
         public int RetryCount
         {
             get => _retryCount;
-            set
+            internal set
             {
                 if (value < 1)
                 {
@@ -46,7 +44,7 @@ namespace MediatorPatternDemo.Web.Library.Attributes
         public int SleepDuration
         {
             get => _sleepDuration;
-            set
+            internal set
             {
                 if (value < 1)
                 {

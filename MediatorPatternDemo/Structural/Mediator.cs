@@ -8,13 +8,13 @@
 
         public override void Send(string message, FriendBase fromFriend)
         {
-            if (fromFriend == this.FriendOne)
+            if (fromFriend == FriendOne)
             {
-                this.FriendTwo?.HandleNotification(message);
+                FriendTwo?.HandleNotification(message);
             }
             else
             {
-                this.FriendOne?.HandleNotification(message);
+                FriendOne?.HandleNotification(message);
             }
         }
     }

@@ -1,67 +1,80 @@
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using Microsoft.AspNetCore.Hosting;
-using Microsoft.Extensions.Configuration;
-using Microsoft.Extensions.Hosting;
-using Microsoft.Extensions.Logging;
+using MediatorPatternDemo.Web.Data;
+using MediatorPatternDemo.Web.Library.Behavior;
+using MediatR;
+using Microsoft.EntityFrameworkCore;
+using Microsoft.OpenApi.Models;
 using Serilog;
-using Serilog.Events;
-using Serilog.Formatting.Json;
-using Serilog.Sinks.SystemConsole.Themes;
 
 namespace MediatorPatternDemo.Web
 {
-    public class Program
+    public static class Program
     {
         public static void Main(string[] args)
         {
-            // The initial "bootstrap" logger is able to log errors during start-up. It's completely replaced by the
-            // logger configured in `UseSerilog()` below, once configuration and dependency-injection have both been
-            // set up successfully.
-            Log.Logger = new LoggerConfiguration()
-                //.ReadFrom.Configuration(Configuration)                
-                .MinimumLevel.Warning()
-                .WriteTo.Console()
-                .CreateLogger();
+            WebApplicationBuilder builder = WebApplication.CreateBuilder(args);
 
-            try
+            _ = builder.Host.UseSerilog((context, services, configurations) =>
             {
-                Log.Information("- Starting web host -");
-                CreateHostBuilder(args).Build().Run();
-            }
-            catch (Exception e)
-            {
-                Log.Fatal(e, $"Host terminated unexpectedly. {e.Message}");
-            }
-            finally
-            {
-                Log.CloseAndFlush();
-            }
-        }
 
-        public static IHostBuilder CreateHostBuilder(string[] args) =>
-            Host.CreateDefaultBuilder(args)
-                .UseSerilog((context, services, configuration) => {
-                    var outputTemplate = "{NewLine}[{Timestamp:HH:mm:ss} {Level:u3} {Properties}]{NewLine}{Message:lj}{NewLine}{Exception}";
-                    configuration
-                        .MinimumLevel.Verbose()
-                        .MinimumLevel.Override("Microsoft", LogEventLevel.Warning)
-                        .MinimumLevel.Override("System", LogEventLevel.Warning)
-                        // .ReadFrom.Configuration(context.Configuration)
-                        .ReadFrom.Services(services)
-                        .Enrich.FromLogContext()
-                        .Enrich.WithThreadId()
-                        .Enrich.WithMachineName()
-                        .Enrich.WithEnvironmentName()
-                        .WriteTo.Console(outputTemplate: outputTemplate, theme: AnsiConsoleTheme.Code)
-                        .WriteTo.Debug(new JsonFormatter(renderMessage: true), LogEventLevel.Verbose)
-                        .WriteTo.Seq("http://localhost:5341");
-                })
-                .ConfigureWebHostDefaults(webBuilder =>
+                _ = configurations.ReadFrom.Configuration(context.Configuration, "Serilog");
+            });
+
+            _ = builder.Services.AddControllers();
+            _ = builder.Services.AddEndpointsApiExplorer();
+            _ = builder.Services.AddSwaggerGen(options =>
+            {
+
+                options.SwaggerDoc("v1", new Microsoft.OpenApi.Models.OpenApiInfo
                 {
-                    webBuilder.UseStartup<Startup>();
+                    Title = "Mediator Pattern Demo",
+                    Version = "v1",
+                    Description = "",
+                    Contact = new OpenApiContact
+                    {
+                        Name = "Mohammed Hoque",
+                        Email = string.Empty
+                    },
+                    License = new OpenApiLicense
+                    {
+                        Name = "Use under...",
+                    }
                 });
+            });
+
+            _ = builder.Services.AddMediatR(typeof(Program));
+            _ = builder.Services.AddTransient(typeof(IPipelineBehavior<,>), typeof(LoggingBehavior<,>));
+            _ = builder.Services.AddTransient(typeof(IPipelineBehavior<,>), typeof(RetryPolicyBehavior<,>));
+
+            _ = builder.Services.AddDbContext<UserContext>(
+               options =>
+               {
+                   _ = options.EnableSensitiveDataLogging(true);
+                   _ = options.UseInMemoryDatabase("MediatorPatternDemoDatabase");
+               });
+
+
+            WebApplication app = builder.Build();
+
+            _ = app.UseSwagger();
+            _ = app.UseSwaggerUI(options =>
+            {
+                options.DocumentTitle = "Mediator Pattern Demo";
+            });
+
+            _ = app.MapFallback(() => Results.Redirect("/swagger"));
+
+            using IServiceScope serviceScope = app.Services.CreateScope();
+            using UserContext context = serviceScope.ServiceProvider.GetRequiredService<UserContext>();
+            _ = context?.Database.EnsureCreated();
+            context?.Users.AddRange(
+                new Entities.User { Id = 1, Name = "User One", Email = "test.one@email.com" },
+                new Entities.User { Id = 2, Name = "User Two", Email = "test.two@email.com" }
+                );
+            _ = context?.SaveChanges();
+
+            _ = app.MapControllers();
+
+            app.Run();
+        }
     }
 }

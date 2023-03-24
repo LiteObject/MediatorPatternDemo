@@ -9,7 +9,7 @@
 
         internal override void Receive(string from, string message)
         {
-            Console.WriteLine($"{this.Name} ({nameof(DevTeamMember)}) has received a message.");
+            Console.WriteLine($"{Name} ({nameof(DevTeamMember)}) has received a message.");
             base.Receive(from, message);
         }
     }

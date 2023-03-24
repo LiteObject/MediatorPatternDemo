@@ -1,12 +1,6 @@
 version: '3.4'
 
 services:
-  #mediatorpatterndemo.web:
-  #  image: ${DOCKER_REGISTRY-}mediatorpatterndemoweb
-  #  build:
-  #    context: .
-  #    dockerfile: MediatorPatternDemo.Web/Dockerfile
-
   seq-demo-logging:
     image: datalust/seq:latest
     container_name: "seq-demo-logging"

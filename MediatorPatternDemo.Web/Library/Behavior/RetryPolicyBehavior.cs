@@ -1,11 +1,7 @@
 ﻿using MediatorPatternDemo.Web.Library.Attributes;
 using MediatR;
-using Microsoft.Extensions.Logging;
 using Polly;
-using System;
 using System.Reflection;
-using System.Threading;
-using System.Threading.Tasks;
 
 namespace MediatorPatternDemo.Web.Library.Behavior
 {
@@ -18,24 +14,23 @@ namespace MediatorPatternDemo.Web.Library.Behavior
     public class RetryPolicyBehavior<TRequest, TResponse> : IPipelineBehavior<TRequest, TResponse>
         where TRequest : IRequest<TResponse>
     {
-        private readonly ILogger<RetryPolicyBehavior<TRequest, TResponse>> _logger;
+        // private readonly ILogger<RetryPolicyBehavior<TRequest, TResponse>> _logger;
 
-        public RetryPolicyBehavior(ILogger<RetryPolicyBehavior<TRequest, TResponse>> logger)
+        public RetryPolicyBehavior()
         {
-            _logger = logger;
         }
 
         public async Task<TResponse> Handle(TRequest request, CancellationToken cancellationToken, RequestHandlerDelegate<TResponse> next)
         {
-            var retryAttr = typeof(TRequest).GetCustomAttribute<RetryPolicyAttribute>();
+            RetryPolicyAttribute? retryAttr = typeof(TRequest).GetCustomAttribute<RetryPolicyAttribute>();
 
             if (retryAttr == null)
             {
-                _logger.LogDebug("There's no retry policy attached to {name}", typeof(TRequest).Name);
+                Console.WriteLine($"There's no retry policy attached to {typeof(TRequest).Name}");
                 return await next();
             }
 
-            _logger.LogDebug("RetryCount: {count}, SleepDuration {duration}", retryAttr.RetryCount, retryAttr.SleepDuration);
+            Console.WriteLine($"RetryCount: {retryAttr.RetryCount}, SleepDuration {retryAttr.SleepDuration}");
 
             // TODO: Add fallback policy
 
@@ -44,7 +39,7 @@ namespace MediatorPatternDemo.Web.Library.Behavior
                 .WaitAndRetryAsync(
                     retryAttr.RetryCount,
                     i => TimeSpan.FromMilliseconds(i * retryAttr.SleepDuration),
-                    (ex, ts, _) => _logger.LogWarning(ex, "Failed to execute handler for request {Request}, retrying after {RetryTimeSpan}s: {ExceptionMessage}", typeof(TRequest).Name, ts.TotalSeconds, ex.Message))
+                    (ex, ts, _) => Console.Error.WriteLine($"Failed to execute handler for request {typeof(TRequest).Name}, retrying after {ts.TotalSeconds}s: {ex.Message}", ex))
                 .ExecuteAsync(async () => await next());
         }
     }

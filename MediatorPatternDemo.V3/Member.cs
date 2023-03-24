@@ -7,7 +7,7 @@
         protected Member(string name)
         {
             ArgumentException.ThrowIfNullOrEmpty(name, nameof(name));
-            this.Name = name;
+            Name = name;
         }
 
         public string Name { get; }
@@ -25,7 +25,7 @@
                 throw new InvalidOperationException($"Assign a chatroom (using {nameof(SetChatroom)} method) before invoking {nameof(Send)}");
             }
 
-            this.chatroom.Send(this.Name, message);
+            chatroom.Send(Name, message);
         }
 
         internal void SendTo<T>(string message)
@@ -36,7 +36,7 @@
                 throw new InvalidOperationException($"Assign a chatroom (using {nameof(SetChatroom)} method) before invoking {nameof(Send)}");
             }
 
-            this.chatroom.SendTo<T>(this.Name, message);
+            chatroom.SendTo<T>(Name, message);
         }
 
         internal virtual void Receive(string from, string message)
