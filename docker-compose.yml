@@ -1,0 +1,24 @@
+version: '3.4'
+
+services:
+  #mediatorpatterndemo.web:
+  #  image: ${DOCKER_REGISTRY-}mediatorpatterndemoweb
+  #  build:
+  #    context: .
+  #    dockerfile: MediatorPatternDemo.Web/Dockerfile
+
+  seq-demo-logging:
+    image: datalust/seq:latest
+    container_name: "seq-demo-logging"
+    restart: unless-stopped
+    ports:
+      - 5380:80   # UI
+      - 5341:5341 # Data ingest
+    environment:      
+      - ACCEPT_EULA=Y
+  smtp-demo-logging:
+    image: rnwood/smtp4dev
+    container_name: "smtp-demo-logging"
+    restart: always
+    ports:
+      - "5010:80"
