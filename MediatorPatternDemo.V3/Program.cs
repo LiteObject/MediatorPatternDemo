@@ -6,16 +6,18 @@
         {
             TeamChatroom teamChat = new();
 
+            DevTeamMember joe = new("Joe");
+            DevTeamMember david = new("David");
             DevTeamMember mohammed = new("Mohammed");
-            DevTeamMember gavin = new("Gavin");
+
             QaTeamMember camila = new("Camila");
 
-            teamChat.RegisterMembers(mohammed, gavin, camila);
+            teamChat.RegisterMembers(joe, david, camila, mohammed);
 
-            mohammed.Send("Hey, are you ready for a demo?");
-            camila.Send($"Yes Byron.");
+            joe.SendTo<DevTeamMember>("Can someone review my PR?");
 
-            camila.SendTo<DevTeamMember>("Can you review my PR?");
+            david.Send("Just a friendly reminder that I will be off tomorrow.");
+            camila.Send($"Enjoy your day off.");
         }
     }
 }
