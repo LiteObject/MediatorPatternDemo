@@ -8,17 +8,17 @@ namespace MediatorPatternDemo.V2
         {
             Mediator mediator = new();
 
-            /* var Friend1 = new Friend1();
-            var Friend2 = new Friend2();
+            /* FriendOne friendOne = new();
+            FriendTwo friendTwo = new();
 
-            mediator.Register(Friend1);
-            mediator.Register(Friend2); */
+            mediator.Register(friendOne);
+            mediator.Register(friendTwo); */
 
-            Friend1 Friend1 = mediator.CreateFriend<Friend1>();
-            Friend2 Friend2 = mediator.CreateFriend<Friend2>();
+            FriendOne Friend1 = mediator.CreateFriend<FriendOne>();
+            FriendTwo Friend2 = mediator.CreateFriend<FriendTwo>();
 
-            Friend1.Send($"Hello Word from Friend 1");
-            Friend2.Send($"Hello Word from Friend 2");
+            Friend1.Send($"Hello Word from {nameof(FriendOne)}");
+            Friend2.Send($"Hello Word from {nameof(FriendTwo)}");
         }
     }
 }
