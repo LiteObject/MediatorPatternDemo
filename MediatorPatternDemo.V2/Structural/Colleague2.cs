@@ -1,9 +1,9 @@
 ﻿namespace MediatorPatternDemo.V2.Structural
 {
     /// <summary>
-    /// The colleague 2.
+    /// The Friend 2.
     /// </summary>
-    internal class Colleague2 : ColleagueBase
+    internal class Friend2 : FriendBase
     {
         /// <summary>
         /// The handle notification.
@@ -13,7 +13,7 @@
         /// </param>
         public override void HandleNotification(string message)
         {
-            Console.WriteLine($"{nameof(Colleague2)} has received a message:\n{message}");
+            Console.WriteLine($"{nameof(Friend2)} has received a message:\n{message}");
         }
     }
 }

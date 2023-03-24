@@ -1,7 +1,7 @@
 ﻿namespace MediatorPatternDemo.V2.Structural
 {
     /// <summary>
-    /// The mediator define communication between colleagues
+    /// The mediator define communication between Friends
     /// </summary>
     internal abstract class MediatorBase
     {
@@ -11,9 +11,9 @@
         /// <param name="message">
         /// The message.
         /// </param>
-        /// <param name="colleague">
-        /// The colleague.
+        /// <param name="Friend">
+        /// The Friend.
         /// </param>
-        public abstract void Send(string message, ColleagueBase colleague);
+        public abstract void Send(string message, FriendBase Friend);
     }
 }

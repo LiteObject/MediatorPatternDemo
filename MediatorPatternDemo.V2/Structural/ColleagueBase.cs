@@ -1,9 +1,9 @@
 ﻿namespace MediatorPatternDemo.V2.Structural
 {
     /// <summary>
-    /// The colleague communicates only with the <see cref="MediatorBase"/> class.
+    /// The Friend communicates only with the <see cref="MediatorBase"/> class.
     /// </summary>
-    internal abstract class ColleagueBase
+    internal abstract class FriendBase
     {
         /// <summary>
         /// The mediator.

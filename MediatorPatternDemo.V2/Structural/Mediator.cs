@@ -6,24 +6,24 @@
     internal class Mediator : MediatorBase
     {
         /// <summary>
-        /// The colleagues.
+        /// The Friends.
         /// </summary>
-        private readonly List<ColleagueBase> colleagues = new();
+        private readonly List<FriendBase> Friends = new();
 
         /// <summary>
         /// The register.
         /// </summary>
-        /// <param name="colleague">
-        /// The colleague.
+        /// <param name="Friend">
+        /// The Friend.
         /// </param>
-        public void Register(ColleagueBase colleague)
+        public void Register(FriendBase Friend)
         {
-            colleague.SetMediator(this);
-            this.colleagues.Add(colleague);
+            Friend.SetMediator(this);
+            this.Friends.Add(Friend);
         }
 
         /// <summary>
-        /// The create colleague.
+        /// The create Friend.
         /// </summary>
         /// <typeparam name="T">
         /// The type.
@@ -31,13 +31,13 @@
         /// <returns>
         /// The <see cref="T"/>.
         /// </returns>
-        public T CreateColleague<T>()
-            where T : ColleagueBase, new()
+        public T CreateFriend<T>()
+            where T : FriendBase, new()
         {
             // Encapsulate the creation and bidirectional communication
             T c = new();
             c.SetMediator(this);
-            this.colleagues.Add(c);
+            this.Friends.Add(c);
             return c;
         }
 
@@ -47,12 +47,12 @@
         /// <param name="message">
         /// The message.
         /// </param>
-        /// <param name="colleague">
-        /// The colleague.
+        /// <param name="Friend">
+        /// The Friend.
         /// </param>
-        public override void Send(string message, ColleagueBase colleague)
+        public override void Send(string message, FriendBase Friend)
         {
-            this.colleagues.Where(c => c != colleague).ToList().ForEach(c => c.HandleNotification(message));
+            this.Friends.Where(c => c != Friend).ToList().ForEach(c => c.HandleNotification(message));
         }
     }
 }

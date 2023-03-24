@@ -1,17 +1,8 @@
 ﻿namespace MediatorPatternDemo.V3
 {
-    /// <summary>
-    /// The program.
-    /// </summary>
     internal class Program
     {
-        /// <summary>
-        /// The main.
-        /// </summary>
-        /// <param name="args">
-        /// The args.
-        /// </param>
-        public static void Main(string[] args)
+        public static void Main()
         {
             TeamChatroom teamChat = new();
 

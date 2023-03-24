@@ -2,32 +2,23 @@
 
 namespace MediatorPatternDemo.V2
 {
-    /// <summary>
-    /// The program.
-    /// </summary>
     internal class Program
     {
-        /// <summary>
-        /// The main.
-        /// </summary>
-        /// <param name="args">
-        /// The args.
-        /// </param>
-        public static void Main(string[] args)
+        public static void Main()
         {
             Mediator mediator = new();
 
-            /* var colleague1 = new Colleague1();
-            var colleague2 = new Colleague2();
+            /* var Friend1 = new Friend1();
+            var Friend2 = new Friend2();
 
-            mediator.Register(colleague1);
-            mediator.Register(colleague2); */
+            mediator.Register(Friend1);
+            mediator.Register(Friend2); */
 
-            Colleague1 colleague1 = mediator.CreateColleague<Colleague1>();
-            Colleague2 colleague2 = mediator.CreateColleague<Colleague2>();
+            Friend1 Friend1 = mediator.CreateFriend<Friend1>();
+            Friend2 Friend2 = mediator.CreateFriend<Friend2>();
 
-            colleague1.Send($"Hello Word from colleague 1");
-            colleague2.Send($"Hello Word from colleague 2");
+            Friend1.Send($"Hello Word from Friend 1");
+            Friend2.Send($"Hello Word from Friend 2");
         }
     }
 }
