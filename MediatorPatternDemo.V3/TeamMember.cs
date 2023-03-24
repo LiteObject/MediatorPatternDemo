@@ -1,7 +1,5 @@
 ﻿namespace MediatorPatternDemo.V3
 {
-    using System;
-
     /// <summary>
     /// The team member.
     /// </summary>

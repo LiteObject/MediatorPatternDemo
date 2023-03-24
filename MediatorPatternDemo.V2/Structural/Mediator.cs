@@ -1,8 +1,5 @@
 ﻿namespace MediatorPatternDemo.V2.Structural
 {
-    using System.Collections.Generic;
-    using System.Linq;
-
     /// <summary>
     /// The mediator imp.
     /// </summary>
@@ -11,7 +8,7 @@
         /// <summary>
         /// The colleagues.
         /// </summary>
-        private readonly List<ColleagueBase> colleagues = new List<ColleagueBase>();
+        private readonly List<ColleagueBase> colleagues = new();
 
         /// <summary>
         /// The register.
@@ -38,7 +35,7 @@
             where T : ColleagueBase, new()
         {
             // Encapsulate the creation and bidirectional communication
-            var c = new T();
+            T c = new();
             c.SetMediator(this);
             this.colleagues.Add(c);
             return c;

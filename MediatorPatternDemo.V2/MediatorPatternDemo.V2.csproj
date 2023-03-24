@@ -1,8 +1,24 @@
 <Project Sdk="Microsoft.NET.Sdk">
 
-  <PropertyGroup>
-    <OutputType>Exe</OutputType>
-    <TargetFramework>netcoreapp3.1</TargetFramework>
-  </PropertyGroup>
+	<PropertyGroup>
+		<OutputType>Exe</OutputType>
+		<TargetFramework>net7.0</TargetFramework>
+		<Nullable>enable</Nullable>
+		<ImplicitUsings>enable</ImplicitUsings>
+		<EnableNETAnalyzers>true</EnableNETAnalyzers>
+		<AnalysisLevel>latest</AnalysisLevel>
+		<AnalysisMode>Recommended</AnalysisMode>
+		<AnalysisModeSecurity>All</AnalysisModeSecurity>
+		<AnalysisModePerformance>All</AnalysisModePerformance>
+		<AnalysisModeReliability>All</AnalysisModeReliability>
+		<AnalysisModeDesign>All</AnalysisModeDesign>
+		<AnalysisModeMaintainability>All</AnalysisModeMaintainability>
+		<AnalysisModeUsage>All</AnalysisModeUsage>
+		<AnalysisModeNaming>All</AnalysisModeNaming>
+		<AnalysisModeStyle>All</AnalysisModeStyle>
+		<AnalysisModeSingleFile>All</AnalysisModeSingleFile>
+		<AnalysisModeDocumentation>All</AnalysisModeDocumentation>
+		<EnforceCodeStyleInBuild>True</EnforceCodeStyleInBuild>
+	</PropertyGroup>
 
 </Project>

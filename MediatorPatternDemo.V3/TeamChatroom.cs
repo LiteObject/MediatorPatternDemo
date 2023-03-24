@@ -1,8 +1,5 @@
 ﻿namespace MediatorPatternDemo.V3
 {
-    using System.Collections.Generic;
-    using System.Linq;
-
     /// <summary>
     /// The team chatroom.
     /// </summary>
@@ -11,7 +8,7 @@
         /// <summary>
         /// The members.
         /// </summary>
-        private readonly List<TeamMember> members = new List<TeamMember>();
+        private readonly List<TeamMember> members = new();
 
         /// <summary>
         /// The register.

@@ -1,7 +1,5 @@
 ﻿namespace MediatorPatternDemo.Structural
 {
-    using System;
-
     /// <summary>
     /// The colleague 1.
     /// </summary>

@@ -1,9 +1,5 @@
 ﻿namespace MediatorPatternDemo.V3
 {
-    using System;
-    using System.Collections.Generic;
-    using System.Text;
-
     /// <summary>
     /// The chatroom.
     /// </summary>

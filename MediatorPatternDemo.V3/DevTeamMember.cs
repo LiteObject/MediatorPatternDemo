@@ -1,6 +1,4 @@
-﻿using System;
-
-namespace MediatorPatternDemo.V3
+﻿namespace MediatorPatternDemo.V3
 {
     /// <summary>
     /// The dev team member.

@@ -8,8 +8,8 @@
         /// <summary>
         /// The mediator.
         /// </summary>
-        private MediatorBase mediator;
-        
+        private MediatorBase? mediator;
+
         /// <summary>
         /// The send.
         /// </summary>
@@ -18,7 +18,7 @@
         /// </param>
         public virtual void Send(string message)
         {
-            this.mediator.Send(message, this);
+            this.mediator?.Send(message, this);
         }
 
         /// <summary>

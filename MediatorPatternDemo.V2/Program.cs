@@ -1,9 +1,7 @@
-﻿namespace MediatorPatternDemo.V2
+﻿using MediatorPatternDemo.V2.Structural;
+
+namespace MediatorPatternDemo.V2
 {
-    using System;
-
-    using MediatorPatternDemo.V2.Structural;
-
     /// <summary>
     /// The program.
     /// </summary>
@@ -17,7 +15,7 @@
         /// </param>
         public static void Main(string[] args)
         {
-            var mediator = new Mediator();
+            Mediator mediator = new();
 
             /* var colleague1 = new Colleague1();
             var colleague2 = new Colleague2();

@@ -1,7 +1,5 @@
 ﻿namespace MediatorPatternDemo.V3
 {
-    using System;
-
     /// <summary>
     /// The program.
     /// </summary>
@@ -15,18 +13,18 @@
         /// </param>
         public static void Main(string[] args)
         {
-            var teamChat = new TeamChatroom();
+            TeamChatroom teamChat = new();
 
-            var will = new DevTeamMember("Will");
-            var byron = new DevTeamMember("Byron");
-            var geetha = new QaTeamMember("Geetha");
+            DevTeamMember mohammed = new("Mohammed");
+            DevTeamMember gavin = new("Gavin");
+            QaTeamMember camila = new("Camila");
 
-            teamChat.RegisterMembers(will, byron, geetha);
+            teamChat.RegisterMembers(mohammed, gavin, camila);
 
-            byron.Send("Hey Geetha, are you ready for a demo?");
-            geetha.Send($"Yes Byron.");
+            mohammed.Send("Hey, are you ready for a demo?");
+            camila.Send($"Yes Byron.");
 
-            will.SendTo<DevTeamMember>("Can you review my PR?");
+            camila.SendTo<DevTeamMember>("Can you review my PR?");
         }
     }
 }
