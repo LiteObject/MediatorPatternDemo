@@ -10,7 +10,9 @@ using Newtonsoft.Json;
 
 namespace MediatorPatternDemo.Web.Library.Handlers
 {
-    public class UserQueryHandler : IRequestHandler<UserQuery, IList<User>>
+    public class UserQueryHandler :
+        IRequestHandler<UserQuery, IList<User>>,
+        IRequestHandler<UserByIdQuery, User?>
     {
         private readonly UserContext _context;
 
@@ -23,22 +25,27 @@ namespace MediatorPatternDemo.Web.Library.Handlers
 
         public async Task<IList<User>> Handle(UserQuery? request, CancellationToken cancellationToken)
         {
-            //if (request is null)
-            //{
-            //    Console.WriteLine($"{nameof(request)} cannot be null");
-            //    return new List<User>();
-            //}
+            Console.WriteLine($"Inside the handler. Not necessary since we have logging as pipeline behavior. Request Query: {JsonConvert.SerializeObject(request)}\n");
+
+            List<User> users = request switch
+            {
+                { Name.Length: > 1, Email.Length: > 1 } => await _context.Users.Where(u => u.Name == request.Name || u.Email == request.Email).ToListAsync(cancellationToken),
+                { Name: null } => await _context.Users.Where(u => u.Email == request.Email).ToListAsync(cancellationToken: cancellationToken),
+                { Email: null } => await _context.Users.Where(u => u.Name == request.Name).ToListAsync(cancellationToken: cancellationToken),
+                _ => await _context.Users.ToListAsync(cancellationToken: cancellationToken)
+            };
+
+            return users;
+        }
+
+        public async Task<User?> Handle(UserByIdQuery request, CancellationToken cancellationToken)
+        {
+            ArgumentNullException.ThrowIfNull(request, nameof(request));
 
             Console.WriteLine($"Inside the handler. Not necessary since we have logging as pipeline behavior. Request Query: {JsonConvert.SerializeObject(request)}\n");
 
-            List<User> users = request?.Name?.Length > 0
-                ? await _context.Users.Where(u => u.Name.Contains(request.Name)).ToListAsync(cancellationToken: cancellationToken)
-                : await _context.Users.ToListAsync(cancellationToken: cancellationToken);
-
-            // Business logic here
-            // this.context.Users.FirstOrDefaultAsync(u => u.Id == request.Id, cancellationToken: cancellationToken);
-
-            return users;
+            User? user = await _context.Users.FindAsync(new object?[] { request.Id }, cancellationToken: cancellationToken);
+            return user;
         }
     }
 }

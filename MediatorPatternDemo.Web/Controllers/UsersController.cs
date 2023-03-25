@@ -80,17 +80,9 @@ namespace MediatorPatternDemo.Web.Controllers
         public async Task<IActionResult> Get(int id)
         {
             // By default, route parameters cannot be optional in OpenAPI/Swagger.
-            UserQuery query = new() { Id = id };
-            IList<User> users = await _mediator.Send<IList<User>>(query);
-
-            if (users == null)
-            {
-                return NotFound(query);
-            }
-
-            User? user = users.FirstOrDefault();
-
-            return Ok(user);
+            UserByIdQuery query = new() { Id = id };
+            User? user = await _mediator.Send<User>(query);
+            return user == null ? NotFound(query) : Ok(user);
         }
 
         /// <summary>

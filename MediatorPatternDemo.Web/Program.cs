@@ -4,6 +4,7 @@ using MediatR;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.OpenApi.Models;
 using Serilog;
+using System.Reflection;
 
 namespace MediatorPatternDemo.Web
 {
@@ -41,7 +42,7 @@ namespace MediatorPatternDemo.Web
                 });
             });
 
-            _ = builder.Services.AddMediatR(typeof(Program));
+            _ = builder.Services.AddMediatR(Assembly.GetExecutingAssembly());
             _ = builder.Services.AddTransient(typeof(IPipelineBehavior<,>), typeof(LoggingBehavior<,>));
             _ = builder.Services.AddTransient(typeof(IPipelineBehavior<,>), typeof(RetryPolicyBehavior<,>));
 

@@ -6,7 +6,7 @@ namespace MediatorPatternDemo.Web.Library.Quaries
 {
     public class UserQuery : IRequest<User>, IRequest<IList<User>>
     {
-        public int? Id { get; set; }
+        public string? Email { get; set; }
 
         public string? Name { get; set; }
     }
