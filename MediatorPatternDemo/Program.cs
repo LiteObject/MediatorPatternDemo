@@ -8,14 +8,15 @@ namespace MediatorPatternDemo
         {
             Mediator mediator = new();
 
-            FriendOne FriendOne = new(mediator);
-            FriendTwo FriendTwo = new(mediator);
+            SoftwareEngineer employeeOne = new(mediator, "Joe");
 
-            mediator.FriendOne = FriendOne;
-            mediator.FriendTwo = FriendTwo;
+            QualityEngineer employeeTwo = new(mediator, "Vani");
 
-            FriendOne.Send($"Hello Word from {nameof(FriendOne)}");
-            FriendTwo.Send($"Hello Word from {nameof(FriendTwo)}");
+            mediator.EmployeeOne = employeeOne;
+            mediator.EmployeeTwo = employeeTwo;
+
+            employeeOne.Send($"Hello Word from {employeeOne.Name} ({employeeOne.GetType().Name})");
+            employeeTwo.Send($"Hello Word from {employeeTwo.Name} ({employeeTwo.GetType().Name})");
         }
     }
 }

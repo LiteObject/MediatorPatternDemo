@@ -2,19 +2,19 @@
 {
     internal class Mediator : MediatorBase
     {
-        public FriendOne? FriendOne { get; set; }
+        public SoftwareEngineer? EmployeeOne { get; set; }
 
-        public FriendTwo? FriendTwo { get; set; }
+        public QualityEngineer? EmployeeTwo { get; set; }
 
-        public override void Send(string message, FriendBase fromFriend)
+        public override void Send(string message, EmployeeBase from)
         {
-            if (fromFriend == FriendOne)
+            if (from == EmployeeOne)
             {
-                FriendTwo?.HandleNotification(message);
+                EmployeeTwo?.HandleNotification(message);
             }
             else
             {
-                FriendOne?.HandleNotification(message);
+                EmployeeOne?.HandleNotification(message);
             }
         }
     }
