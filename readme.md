@@ -46,18 +46,22 @@ components into a single place, making it easier to comprehend and maintain.
     }
     }}%%
 flowchart LR
-    A(Web API) 
-    M(MediatR)
-    Q([Query Handler])
-    C([Command Handler])
+    A(Web API)
+    C([Command]) 
+    Q([Query])
+    M{MediatR}
+    QH([Query Handler])
+    CH([Command Handler])
     D[(Database)]
 
-    A -->| Query | M
-    A -->|Command| M
-    M --> Q
-    M --> C
-    Q --> D
-    C --> D
+    A --> C
+    A --> Q
+    Q--> M
+    C --> M    
+    M --> QH
+    M --> CH
+    QH --> D
+    CH --> D
   
 ```
 ---
