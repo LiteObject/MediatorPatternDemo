@@ -2,27 +2,28 @@
 {
     internal class Mediator : MediatorBase
     {
-        private readonly List<FriendBase> Friends = new();
+        private readonly List<EmployeeBase> Employees = new();
 
-        public void Register(FriendBase Friend)
+        public void Register(EmployeeBase employee)
         {
-            Friend.SetMediator(this);
-            Friends.Add(Friend);
+            employee.SetMediator(this);
+            Employees.Add(employee);
         }
 
-        public T CreateFriend<T>()
-            where T : FriendBase, new()
+        public T CreateEmployee<T>(string name)
+            where T : EmployeeBase, new()
         {
             // Encapsulate the creation and bidirectional communication
             T c = new();
             c.SetMediator(this);
-            Friends.Add(c);
+            c.SetName(name);
+            Employees.Add(c);
             return c;
         }
 
-        public override void Send(string message, FriendBase fromFriend)
+        public override void Send(string message, EmployeeBase fromFriend)
         {
-            Friends.Where(c => c != fromFriend).ToList().ForEach(c => c.HandleNotification(message));
+            Employees.Where(c => c != fromFriend).ToList().ForEach(c => c.HandleNotification(message));
         }
     }
 }

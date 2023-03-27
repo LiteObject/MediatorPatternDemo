@@ -2,7 +2,7 @@
 {
     internal abstract class Member
     {
-        private Chatroom? chatroom;
+        private ChatroomBase? chatroom;
 
         protected Member(string name)
         {
@@ -12,7 +12,7 @@
 
         public string Name { get; }
 
-        public void SetChatroom(Chatroom chatroom)
+        public void SetChatroom(ChatroomBase chatroom)
         {
             ArgumentNullException.ThrowIfNull(chatroom, nameof(chatroom));
             this.chatroom = chatroom;

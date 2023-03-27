@@ -1,6 +1,6 @@
 ﻿namespace MediatorPatternDemo.V3
 {
-    internal abstract class Chatroom
+    internal abstract class ChatroomBase
     {
         public abstract void Register(Member member);
 

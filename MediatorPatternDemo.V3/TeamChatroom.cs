@@ -1,6 +1,6 @@
 ﻿namespace MediatorPatternDemo.V3
 {
-    internal class TeamChatroom : Chatroom
+    internal class TeamChatroom : ChatroomBase
     {
         private readonly List<Member> members = new();
 

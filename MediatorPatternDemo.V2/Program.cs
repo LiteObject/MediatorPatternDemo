@@ -1,4 +1,5 @@
-﻿using MediatorPatternDemo.V2.Structural;
+﻿using Humanizer;
+using MediatorPatternDemo.V2.Structural;
 
 namespace MediatorPatternDemo.V2
 {
@@ -14,11 +15,11 @@ namespace MediatorPatternDemo.V2
             mediator.Register(friendOne);
             mediator.Register(friendTwo); */
 
-            FriendOne Friend1 = mediator.CreateFriend<FriendOne>();
-            FriendTwo Friend2 = mediator.CreateFriend<FriendTwo>();
+            QualityEngineer employeeOne = mediator.CreateEmployee<QualityEngineer>("Jane");
+            SoftwareEngineer employeeTwo = mediator.CreateEmployee<SoftwareEngineer>("Jon");
 
-            Friend1.Send($"Hello Word from {nameof(FriendOne)}");
-            Friend2.Send($"Hello Word from {nameof(FriendTwo)}");
+            employeeOne.Send($"Hello from {employeeOne.Name} ({employeeOne.GetType().Name.Humanize()})");
+            employeeTwo.Send($"Hello from {employeeTwo.Name} ({employeeTwo.GetType().Name.Humanize()})");
         }
     }
 }

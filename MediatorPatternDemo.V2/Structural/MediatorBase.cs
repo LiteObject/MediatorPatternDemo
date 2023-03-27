@@ -1,7 +1,7 @@
 ﻿namespace MediatorPatternDemo.V2.Structural
 {
-    internal abstract class MediatorBase
+    public abstract class MediatorBase
     {
-        public abstract void Send(string message, FriendBase fromFriend);
+        public abstract void Send(string message, EmployeeBase fromFriend);
     }
 }

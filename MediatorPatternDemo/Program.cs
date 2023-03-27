@@ -9,15 +9,15 @@ namespace MediatorPatternDemo
         {
             Mediator mediator = new();
 
-            SoftwareEngineer employeeOne = new(mediator, "Joe");
+            SoftwareEngineer employeeOne = new(mediator, "Jon");
 
-            QualityEngineer employeeTwo = new(mediator, "Vani");
+            QualityEngineer employeeTwo = new(mediator, "Jane");
 
             mediator.EmployeeOne = employeeOne;
             mediator.EmployeeTwo = employeeTwo;
 
-            employeeOne.Send($"Hello Word from {employeeOne.Name} ({employeeOne.GetType().Name.Humanize()})");
-            employeeTwo.Send($"Hello Word from {employeeTwo.Name} ({employeeTwo.GetType().Name.Humanize()})");
+            employeeOne.Send($"Hello from {employeeOne.Name} ({employeeOne.GetType().Name.Humanize()})");
+            employeeTwo.Send($"Hello from {employeeTwo.Name} ({employeeTwo.GetType().Name.Humanize()})");
         }
     }
 }
