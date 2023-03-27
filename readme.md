@@ -25,15 +25,41 @@ components into a single place, making it easier to comprehend and maintain.
 ---
 
 ```mermaid
-flowchart LR;
-style A fill:#008080,stroke:#fff,stroke-width:1px,color:#fff
-style B fill:#006666,stroke:#fff,stroke-width:1px,color:#fff
-style C fill:#004c4c,stroke:#fff,stroke-width:1px,color:#fff
+%%{init:{
+    "theme":"base",
+    "flowchart": {
+        "htmlLabels": true,
+        "curve": "basis",
+        "diagramPadding": 50,
+        "nodeSpacing": 100,
+        "useMaxWidth": true
+    },
+    "themeVariables": {
+        "primaryColor": "#BB2528",
+        "primaryTextColor": "#FFF",
+        "primaryBorderColor": "#BB2528",
+        "lineColor": "#000",
+        "secondaryColor": "#1ECBE1",
+        "secondaryTextColor": "#000",
+        "secondaryBorderColor": "#1ECBE1",
+        "tertiaryColor": "#FFF"
+    }
+    }}%%
+flowchart LR
+    A(Web API) 
+    M(MediatR)
+    Q([Query Handler])
+    C([Command Handler])
+    D[(Database)]
 
-    A(C# Code)-- Compiler -->B(MSIL Code);    
-    B-- JIT -->C(Native Code);
+    A -->| Query | M
+    A -->|Command| M
+    M --> Q
+    M --> C
+    Q --> D
+    C --> D
+  
 ```
-
 ---
 
 ## Here we have three demos to show gradual changes/improvement and the use of the "MediatR" library.
