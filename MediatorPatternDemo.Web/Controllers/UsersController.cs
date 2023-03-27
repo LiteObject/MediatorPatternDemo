@@ -54,7 +54,7 @@ namespace MediatorPatternDemo.Web.Controllers
         ]
         [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(IList<User>))]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
-        public async Task<IActionResult> GetAll([FromQuery] UserQuery? query = null)
+        public async Task<IActionResult> GetAll([FromQuery] UserQuery? query)
         {
             // By default, route parameters cannot be optional in OpenAPI/Swagger.
             IList<User> users = await _mediator.Send<IList<User>>(query, default);

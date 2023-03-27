@@ -19,7 +19,7 @@ namespace MediatorPatternDemo.Web.Library.Behavior
         {
         }
 
-        public async Task<TResponse> Handle(TRequest request, CancellationToken cancellationToken, RequestHandlerDelegate<TResponse> next)
+        public async Task<TResponse> Handle(TRequest request, RequestHandlerDelegate<TResponse> next, CancellationToken cancellationToken)
         {
             // Request
             Console.WriteLine("Pipeline behaviors were explicitly design for requests, NOT for notifications.");

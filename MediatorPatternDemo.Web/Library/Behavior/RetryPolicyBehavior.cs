@@ -20,7 +20,7 @@ namespace MediatorPatternDemo.Web.Library.Behavior
         {
         }
 
-        public async Task<TResponse> Handle(TRequest request, CancellationToken cancellationToken, RequestHandlerDelegate<TResponse> next)
+        public async Task<TResponse> Handle(TRequest request, RequestHandlerDelegate<TResponse> next, CancellationToken cancellationToken)
         {
             RetryPolicyAttribute? retryAttr = typeof(TRequest).GetCustomAttribute<RetryPolicyAttribute>();
 
