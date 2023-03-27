@@ -1,4 +1,6 @@
-﻿namespace MediatorPatternDemo.Structural
+﻿using Humanizer;
+
+namespace MediatorPatternDemo.Structural
 {
     internal class QualityEngineer : EmployeeBase
     {
@@ -10,7 +12,7 @@
         public override void HandleNotification(string message)
         {
             // Console.WriteLine($"\n{nameof(QualityEngineer)} has received a message:\n {message}");
-            Console.WriteLine($"\n{base.Name} ({this.GetType().Name}) has received a message:\n {message}");
+            Console.WriteLine($"\n{base.Name} ({this.GetType().Name.Humanize()}) has received a message:\n[{DateTime.Now}] {message}");
         }
     }
 }
