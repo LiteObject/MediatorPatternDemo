@@ -2,6 +2,6 @@
 {
     internal abstract class MediatorBase
     {
-        public abstract void Send(string message, FriendBase fromFriend);
+        public abstract void Send(string message, EmployeeBase from);
     }
 }
